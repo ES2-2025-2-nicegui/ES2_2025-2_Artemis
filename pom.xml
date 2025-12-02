@@ -31,10 +31,11 @@
     <maven-checkstyle.version>3.6.0</maven-checkstyle.version>
     <nohttp-checkstyle.version>0.0.11</nohttp-checkstyle.version>
     <spring-format.version>0.0.47</spring-format.version>
-
+    <jacoco.version>0.8.14</jacoco.version>
     <sonar.organization>es2-2025-2-nicegui</sonar.organization>
     <sonar.projectKey>ES2-2025-2-nicegui_ES2_2025-2_nicegui</sonar.projectKey>
     <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+    <sonar.sources>src/main/java,src/main/resources</sonar.sources>
   </properties>
 
   <licenses>
