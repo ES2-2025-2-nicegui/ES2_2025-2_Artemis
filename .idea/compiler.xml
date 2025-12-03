@@ -31,9 +31,9 @@
         <module name="Artemis.main" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel target="25" />
+    <bytecodeTargetLevel target="17" />
   </component>
   <component name="JavacSettings">
-    <option name="ADDITIONAL_OPTIONS_STRING" value="-parameters -Xlint:deprecation" />
+    <option name="ADDITIONAL_OPTIONS_STRING" value="-parameters" />
   </component>
 </project>
