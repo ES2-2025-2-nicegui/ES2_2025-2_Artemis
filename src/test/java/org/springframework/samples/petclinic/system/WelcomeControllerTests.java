@@ -26,58 +26,59 @@ import static org.mockito.Mockito.verify;
 @ExtendWith(MockitoExtension.class)
 class WelcomeControllerTests {
 
-    @Mock
-    private VetRepository vetRepository;
+	@Mock
+	private VetRepository vetRepository;
 
-    @Mock
-    private OwnerRepository ownerRepository;
+	@Mock
+	private OwnerRepository ownerRepository;
 
-    @Mock
-    private Model model;
+	@Mock
+	private Model model;
 
-    private WelcomeController welcomeController;
+	private WelcomeController welcomeController;
 
-    @BeforeEach
-    void setUp() {
-        welcomeController = new WelcomeController(vetRepository, ownerRepository);
-    }
+	@BeforeEach
+	void setUp() {
+		welcomeController = new WelcomeController(vetRepository, ownerRepository);
+	}
 
-    @Test
-    void shouldAddAttributesToModel() {
-        given(vetRepository.findAll()).willReturn(List.of(new Vet(), new Vet()));
-        given(ownerRepository.count()).willReturn(5L);
+	@Test
+	void shouldAddAttributesToModel() {
+		given(vetRepository.findAll()).willReturn(List.of(new Vet(), new Vet()));
+		given(ownerRepository.count()).willReturn(5L);
 
-        Owner owner = new Owner();
-        Pet pet = new Pet();
-        Visit futureVisit = new Visit();
-        futureVisit.setDate(LocalDate.now().plusDays(5));
-        futureVisit.setDescription("Checkup");
-        pet.addVisit(futureVisit);
-        owner.addPet(pet);
+		Owner owner = new Owner();
+		Pet pet = new Pet();
+		Visit futureVisit = new Visit();
+		futureVisit.setDate(LocalDate.now().plusDays(5));
+		futureVisit.setDescription("Checkup");
+		pet.addVisit(futureVisit);
+		owner.addPet(pet);
 
-        given(ownerRepository.findAll()).willReturn(List.of(owner));
+		given(ownerRepository.findAll()).willReturn(List.of(owner));
 
-        String viewName = welcomeController.welcome(model);
+		String viewName = welcomeController.welcome(model);
 
-        assertThat(viewName).isEqualTo("welcome");
+		assertThat(viewName).isEqualTo("welcome");
 
-        verify(model).addAttribute("totalVets", 2L);
-        verify(model).addAttribute("totalOwners", 5L);
-        verify(model).addAttribute("totalPets", 1L);
-        verify(model).addAttribute(eq("upcomingVisits"), any(List.class));
-    }
+		verify(model).addAttribute("totalVets", 2L);
+		verify(model).addAttribute("totalOwners", 5L);
+		verify(model).addAttribute("totalPets", 1L);
+		verify(model).addAttribute(eq("upcomingVisits"), any(List.class));
+	}
 
-    @Test
-    void shouldHandleEmptyData() {
-        given(vetRepository.findAll()).willReturn(Collections.emptyList());
-        given(ownerRepository.count()).willReturn(0L);
-        given(ownerRepository.findAll()).willReturn(Collections.emptyList());
+	@Test
+	void shouldHandleEmptyData() {
+		given(vetRepository.findAll()).willReturn(Collections.emptyList());
+		given(ownerRepository.count()).willReturn(0L);
+		given(ownerRepository.findAll()).willReturn(Collections.emptyList());
 
-        welcomeController.welcome(model);
+		welcomeController.welcome(model);
 
-        verify(model).addAttribute("totalVets", 0L);
-        verify(model).addAttribute("totalOwners", 0L);
-        verify(model).addAttribute("totalPets", 0L);
-        verify(model).addAttribute(eq("upcomingVisits"), eq(Collections.emptyList()));
-    }
+		verify(model).addAttribute("totalVets", 0L);
+		verify(model).addAttribute("totalOwners", 0L);
+		verify(model).addAttribute("totalPets", 0L);
+		verify(model).addAttribute(eq("upcomingVisits"), eq(Collections.emptyList()));
+	}
+
 }
