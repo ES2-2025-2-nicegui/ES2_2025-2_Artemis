@@ -29,4 +29,9 @@ class PetClinicApplicationTests {
 		// na criação de beans ou no escaneamento de componentes, o teste falhará.
 	}
 
+	@Test
+	void testMain() {
+		PetClinicApplication.main(new String[] { "--server.port=0" });
+	}
+
 }
