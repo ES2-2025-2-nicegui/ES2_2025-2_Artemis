@@ -49,7 +49,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * @author Colin But
  * @author Wick Dynex
  */
-@WebMvcTest(value = PetController.class, includeFilters = @ComponentScan.Filter(value = PetTypeFormatter.class, type = FilterType.ASSIGNABLE_TYPE))
+@WebMvcTest(value = PetController.class,
+		includeFilters = @ComponentScan.Filter(value = PetTypeFormatter.class, type = FilterType.ASSIGNABLE_TYPE))
 @DisabledInNativeImage
 @DisabledInAotMode
 class PetControllerTests {
@@ -89,20 +90,21 @@ class PetControllerTests {
 	@Test
 	void testInitCreationForm() throws Exception {
 		mockMvc.perform(get("/owners/{ownerId}/pets/new", TEST_OWNER_ID))
-				.andExpect(status().isOk())
-				.andExpect(view().name("pets/createOrUpdatePetForm"))
-				.andExpect(model().attributeExists("pet"));
+			.andExpect(status().isOk())
+			.andExpect(view().name("pets/createOrUpdatePetForm"))
+			.andExpect(model().attributeExists("pet"));
 	}
 
 	@Test
 	void testProcessCreationFormSuccess() throws Exception {
 		MockMultipartFile emptyFile = new MockMultipartFile("imageFile", new byte[0]);
 		mockMvc
-				.perform(multipart("/owners/{ownerId}/pets/new", TEST_OWNER_ID).file(emptyFile).param("name", "Betty")
-						.param("type", "hamster")
-						.param("birthDate", "2015-02-12"))
-				.andExpect(status().is3xxRedirection())
-				.andExpect(view().name("redirect:/owners/{ownerId}"));
+			.perform(multipart("/owners/{ownerId}/pets/new", TEST_OWNER_ID).file(emptyFile)
+				.param("name", "Betty")
+				.param("type", "hamster")
+				.param("birthDate", "2015-02-12"))
+			.andExpect(status().is3xxRedirection())
+			.andExpect(view().name("redirect:/owners/{ownerId}"));
 	}
 
 	@Test
@@ -138,37 +140,38 @@ class PetControllerTests {
 	void testProcessUpdateFormSameName() throws Exception {
 		MockMultipartFile emptyFile = new MockMultipartFile("imageFile", new byte[0]);
 		mockMvc
-				.perform(multipart("/owners/{ownerId}/pets/{petId}/edit", TEST_OWNER_ID, TEST_PET_ID).file(emptyFile)
-						.param("name", "petty")
-						.param("type", "hamster")
-						.param("birthDate", "2015-02-12"))
-				.andExpect(status().is3xxRedirection())
-				.andExpect(view().name("redirect:/owners/{ownerId}"));
+			.perform(multipart("/owners/{ownerId}/pets/{petId}/edit", TEST_OWNER_ID, TEST_PET_ID).file(emptyFile)
+				.param("name", "petty")
+				.param("type", "hamster")
+				.param("birthDate", "2015-02-12"))
+			.andExpect(status().is3xxRedirection())
+			.andExpect(view().name("redirect:/owners/{ownerId}"));
 	}
 
 	@Test
 	void testProcessUpdateFormWithNotExistingPetId() throws Exception {
 		MockMultipartFile emptyFile = new MockMultipartFile("imageFile", new byte[0]);
 		mockMvc
-				.perform(multipart("/owners/{ownerId}/pets/{petId}/edit", TEST_OWNER_ID, TEST_PET_ID).file(emptyFile)
-						.param("name", "Betty")
-						.param("type", "hamster")
-						.param("birthDate", "2015-02-12")
-						.param("id", "99"))
-				.andExpect(status().is3xxRedirection())
-				.andExpect(view().name("redirect:/owners/{ownerId}"));
+			.perform(multipart("/owners/{ownerId}/pets/{petId}/edit", TEST_OWNER_ID, TEST_PET_ID).file(emptyFile)
+				.param("name", "Betty")
+				.param("type", "hamster")
+				.param("birthDate", "2015-02-12")
+				.param("id", "99"))
+			.andExpect(status().is3xxRedirection())
+			.andExpect(view().name("redirect:/owners/{ownerId}"));
 	}
 
 	@Test
 	void testProcessCreationFormWithExistingId() throws Exception {
 		MockMultipartFile emptyFile = new MockMultipartFile("imageFile", new byte[0]);
 		mockMvc
-				.perform(multipart("/owners/{ownerId}/pets/new", TEST_OWNER_ID).file(emptyFile).param("name", "Betty")
-						.param("type", "hamster")
-						.param("birthDate", "2015-02-12")
-						.param("id", "99"))
-				.andExpect(status().is3xxRedirection())
-				.andExpect(view().name("redirect:/owners/{ownerId}"));
+			.perform(multipart("/owners/{ownerId}/pets/new", TEST_OWNER_ID).file(emptyFile)
+				.param("name", "Betty")
+				.param("type", "hamster")
+				.param("birthDate", "2015-02-12")
+				.param("id", "99"))
+			.andExpect(status().is3xxRedirection())
+			.andExpect(view().name("redirect:/owners/{ownerId}"));
 	}
 
 	@Nested
@@ -178,45 +181,45 @@ class PetControllerTests {
 		void testProcessCreationFormWithBlankName() throws Exception {
 			MockMultipartFile emptyFile = new MockMultipartFile("imageFile", new byte[0]);
 			mockMvc
-					.perform(multipart("/owners/{ownerId}/pets/new", TEST_OWNER_ID).file(emptyFile)
-							.param("name", "\t \n")
-							.param("birthDate", "2015-02-12"))
-					.andExpect(model().attributeHasNoErrors("owner"))
-					.andExpect(model().attributeHasErrors("pet"))
-					.andExpect(model().attributeHasFieldErrors("pet", "name"))
-					.andExpect(model().attributeHasFieldErrorCode("pet", "name", "required"))
-					.andExpect(status().isOk())
-					.andExpect(view().name("pets/createOrUpdatePetForm"));
+				.perform(multipart("/owners/{ownerId}/pets/new", TEST_OWNER_ID).file(emptyFile)
+					.param("name", "\t \n")
+					.param("birthDate", "2015-02-12"))
+				.andExpect(model().attributeHasNoErrors("owner"))
+				.andExpect(model().attributeHasErrors("pet"))
+				.andExpect(model().attributeHasFieldErrors("pet", "name"))
+				.andExpect(model().attributeHasFieldErrorCode("pet", "name", "required"))
+				.andExpect(status().isOk())
+				.andExpect(view().name("pets/createOrUpdatePetForm"));
 		}
 
 		@Test
 		void testProcessCreationFormWithDuplicateName() throws Exception {
 			MockMultipartFile emptyFile = new MockMultipartFile("imageFile", new byte[0]);
 			mockMvc
-					.perform(multipart("/owners/{ownerId}/pets/new", TEST_OWNER_ID).file(emptyFile)
-							.param("name", "petty")
-							.param("birthDate", "2015-02-12"))
-					.andExpect(model().attributeHasNoErrors("owner"))
-					.andExpect(model().attributeHasErrors("pet"))
-					.andExpect(model().attributeHasFieldErrors("pet", "name"))
-					.andExpect(model().attributeHasFieldErrorCode("pet", "name", "duplicate"))
-					.andExpect(status().isOk())
-					.andExpect(view().name("pets/createOrUpdatePetForm"));
+				.perform(multipart("/owners/{ownerId}/pets/new", TEST_OWNER_ID).file(emptyFile)
+					.param("name", "petty")
+					.param("birthDate", "2015-02-12"))
+				.andExpect(model().attributeHasNoErrors("owner"))
+				.andExpect(model().attributeHasErrors("pet"))
+				.andExpect(model().attributeHasFieldErrors("pet", "name"))
+				.andExpect(model().attributeHasFieldErrorCode("pet", "name", "duplicate"))
+				.andExpect(status().isOk())
+				.andExpect(view().name("pets/createOrUpdatePetForm"));
 		}
 
 		@Test
 		void testProcessCreationFormWithMissingPetType() throws Exception {
 			MockMultipartFile emptyFile = new MockMultipartFile("imageFile", new byte[0]);
 			mockMvc
-					.perform(multipart("/owners/{ownerId}/pets/new", TEST_OWNER_ID).file(emptyFile)
-							.param("name", "Betty")
-							.param("birthDate", "2015-02-12"))
-					.andExpect(model().attributeHasNoErrors("owner"))
-					.andExpect(model().attributeHasErrors("pet"))
-					.andExpect(model().attributeHasFieldErrors("pet", "type"))
-					.andExpect(model().attributeHasFieldErrorCode("pet", "type", "required"))
-					.andExpect(status().isOk())
-					.andExpect(view().name("pets/createOrUpdatePetForm"));
+				.perform(multipart("/owners/{ownerId}/pets/new", TEST_OWNER_ID).file(emptyFile)
+					.param("name", "Betty")
+					.param("birthDate", "2015-02-12"))
+				.andExpect(model().attributeHasNoErrors("owner"))
+				.andExpect(model().attributeHasErrors("pet"))
+				.andExpect(model().attributeHasFieldErrors("pet", "type"))
+				.andExpect(model().attributeHasFieldErrorCode("pet", "type", "required"))
+				.andExpect(status().isOk())
+				.andExpect(view().name("pets/createOrUpdatePetForm"));
 		}
 
 		@Test
@@ -226,23 +229,23 @@ class PetControllerTests {
 			MockMultipartFile emptyFile = new MockMultipartFile("imageFile", new byte[0]);
 
 			mockMvc
-					.perform(multipart("/owners/{ownerId}/pets/new", TEST_OWNER_ID).file(emptyFile)
-							.param("name", "Betty")
-							.param("birthDate", futureBirthDate))
-					.andExpect(model().attributeHasNoErrors("owner"))
-					.andExpect(model().attributeHasErrors("pet"))
-					.andExpect(model().attributeHasFieldErrors("pet", "birthDate"))
-					.andExpect(model().attributeHasFieldErrorCode("pet", "birthDate", "typeMismatch.birthDate"))
-					.andExpect(status().isOk())
-					.andExpect(view().name("pets/createOrUpdatePetForm"));
+				.perform(multipart("/owners/{ownerId}/pets/new", TEST_OWNER_ID).file(emptyFile)
+					.param("name", "Betty")
+					.param("birthDate", futureBirthDate))
+				.andExpect(model().attributeHasNoErrors("owner"))
+				.andExpect(model().attributeHasErrors("pet"))
+				.andExpect(model().attributeHasFieldErrors("pet", "birthDate"))
+				.andExpect(model().attributeHasFieldErrorCode("pet", "birthDate", "typeMismatch.birthDate"))
+				.andExpect(status().isOk())
+				.andExpect(view().name("pets/createOrUpdatePetForm"));
 		}
 
 		@Test
 		void testInitUpdateForm() throws Exception {
 			mockMvc.perform(get("/owners/{ownerId}/pets/{petId}/edit", TEST_OWNER_ID, TEST_PET_ID))
-					.andExpect(status().isOk())
-					.andExpect(model().attributeExists("pet"))
-					.andExpect(view().name("pets/createOrUpdatePetForm"));
+				.andExpect(status().isOk())
+				.andExpect(model().attributeExists("pet"))
+				.andExpect(view().name("pets/createOrUpdatePetForm"));
 		}
 
 	}
@@ -251,12 +254,12 @@ class PetControllerTests {
 	void testProcessUpdateFormSuccess() throws Exception {
 		MockMultipartFile emptyFile = new MockMultipartFile("imageFile", new byte[0]);
 		mockMvc
-				.perform(multipart("/owners/{ownerId}/pets/{petId}/edit", TEST_OWNER_ID, TEST_PET_ID).file(emptyFile)
-						.param("name", "Betty")
-						.param("type", "hamster")
-						.param("birthDate", "2015-02-12"))
-				.andExpect(status().is3xxRedirection())
-				.andExpect(view().name("redirect:/owners/{ownerId}"));
+			.perform(multipart("/owners/{ownerId}/pets/{petId}/edit", TEST_OWNER_ID, TEST_PET_ID).file(emptyFile)
+				.param("name", "Betty")
+				.param("type", "hamster")
+				.param("birthDate", "2015-02-12"))
+			.andExpect(status().is3xxRedirection())
+			.andExpect(view().name("redirect:/owners/{ownerId}"));
 	}
 
 	@Nested
@@ -266,28 +269,28 @@ class PetControllerTests {
 		void testProcessUpdateFormWithInvalidBirthDate() throws Exception {
 			MockMultipartFile emptyFile = new MockMultipartFile("imageFile", new byte[0]);
 			mockMvc
-					.perform(multipart("/owners/{ownerId}/pets/{petId}/edit", TEST_OWNER_ID, TEST_PET_ID)
-							.file(emptyFile).param("name", " ")
-							.param("birthDate", "2015/02/12"))
-					.andExpect(model().attributeHasNoErrors("owner"))
-					.andExpect(model().attributeHasErrors("pet"))
-					.andExpect(model().attributeHasFieldErrors("pet", "birthDate"))
-					.andExpect(model().attributeHasFieldErrorCode("pet", "birthDate", "typeMismatch"))
-					.andExpect(view().name("pets/createOrUpdatePetForm"));
+				.perform(multipart("/owners/{ownerId}/pets/{petId}/edit", TEST_OWNER_ID, TEST_PET_ID).file(emptyFile)
+					.param("name", " ")
+					.param("birthDate", "2015/02/12"))
+				.andExpect(model().attributeHasNoErrors("owner"))
+				.andExpect(model().attributeHasErrors("pet"))
+				.andExpect(model().attributeHasFieldErrors("pet", "birthDate"))
+				.andExpect(model().attributeHasFieldErrorCode("pet", "birthDate", "typeMismatch"))
+				.andExpect(view().name("pets/createOrUpdatePetForm"));
 		}
 
 		@Test
 		void testProcessUpdateFormWithBlankName() throws Exception {
 			MockMultipartFile emptyFile = new MockMultipartFile("imageFile", new byte[0]);
 			mockMvc
-					.perform(multipart("/owners/{ownerId}/pets/{petId}/edit", TEST_OWNER_ID, TEST_PET_ID)
-							.file(emptyFile).param("name", "  ")
-							.param("birthDate", "2015-02-12"))
-					.andExpect(model().attributeHasNoErrors("owner"))
-					.andExpect(model().attributeHasErrors("pet"))
-					.andExpect(model().attributeHasFieldErrors("pet", "name"))
-					.andExpect(model().attributeHasFieldErrorCode("pet", "name", "required"))
-					.andExpect(view().name("pets/createOrUpdatePetForm"));
+				.perform(multipart("/owners/{ownerId}/pets/{petId}/edit", TEST_OWNER_ID, TEST_PET_ID).file(emptyFile)
+					.param("name", "  ")
+					.param("birthDate", "2015-02-12"))
+				.andExpect(model().attributeHasNoErrors("owner"))
+				.andExpect(model().attributeHasErrors("pet"))
+				.andExpect(model().attributeHasFieldErrors("pet", "name"))
+				.andExpect(model().attributeHasFieldErrorCode("pet", "name", "required"))
+				.andExpect(view().name("pets/createOrUpdatePetForm"));
 		}
 
 		@Test
@@ -295,17 +298,16 @@ class PetControllerTests {
 			LocalDate futureDate = LocalDate.now().plusDays(1);
 			MockMultipartFile emptyFile = new MockMultipartFile("imageFile", new byte[0]);
 			mockMvc
-					.perform(multipart("/owners/{ownerId}/pets/{petId}/edit", TEST_OWNER_ID, TEST_PET_ID)
-							.file(emptyFile)
-							.param("name", "Betty")
-							.param("type", "hamster")
-							.param("birthDate", futureDate.toString()))
-					.andExpect(model().attributeHasNoErrors("owner"))
-					.andExpect(model().attributeHasErrors("pet"))
-					.andExpect(model().attributeHasFieldErrors("pet", "birthDate"))
-					.andExpect(model().attributeHasFieldErrorCode("pet", "birthDate", "typeMismatch.birthDate"))
-					.andExpect(status().isOk())
-					.andExpect(view().name("pets/createOrUpdatePetForm"));
+				.perform(multipart("/owners/{ownerId}/pets/{petId}/edit", TEST_OWNER_ID, TEST_PET_ID).file(emptyFile)
+					.param("name", "Betty")
+					.param("type", "hamster")
+					.param("birthDate", futureDate.toString()))
+				.andExpect(model().attributeHasNoErrors("owner"))
+				.andExpect(model().attributeHasErrors("pet"))
+				.andExpect(model().attributeHasFieldErrors("pet", "birthDate"))
+				.andExpect(model().attributeHasFieldErrorCode("pet", "birthDate", "typeMismatch.birthDate"))
+				.andExpect(status().isOk())
+				.andExpect(view().name("pets/createOrUpdatePetForm"));
 		}
 
 		@Test
@@ -315,17 +317,16 @@ class PetControllerTests {
 			MockMultipartFile emptyFile = new MockMultipartFile("imageFile", new byte[0]);
 
 			mockMvc
-					.perform(multipart("/owners/{ownerId}/pets/{petId}/edit", TEST_OWNER_ID, ANOTHER_PET_ID)
-							.file(emptyFile)
-							.param("name", EXISTING_NAME)
-							.param("type", "hamster")
-							.param("birthDate", "2015-02-12"))
-					.andExpect(model().attributeHasNoErrors("owner"))
-					.andExpect(model().attributeHasErrors("pet"))
-					.andExpect(model().attributeHasFieldErrors("pet", "name"))
-					.andExpect(model().attributeHasFieldErrorCode("pet", "name", "duplicate"))
-					.andExpect(status().isOk())
-					.andExpect(view().name("pets/createOrUpdatePetForm"));
+				.perform(multipart("/owners/{ownerId}/pets/{petId}/edit", TEST_OWNER_ID, ANOTHER_PET_ID).file(emptyFile)
+					.param("name", EXISTING_NAME)
+					.param("type", "hamster")
+					.param("birthDate", "2015-02-12"))
+				.andExpect(model().attributeHasNoErrors("owner"))
+				.andExpect(model().attributeHasErrors("pet"))
+				.andExpect(model().attributeHasFieldErrors("pet", "name"))
+				.andExpect(model().attributeHasFieldErrorCode("pet", "name", "duplicate"))
+				.andExpect(status().isOk())
+				.andExpect(view().name("pets/createOrUpdatePetForm"));
 		}
 
 	}
@@ -335,11 +336,12 @@ class PetControllerTests {
 		MockMultipartFile file = new MockMultipartFile("imageFile", "test.png", "image/png",
 				"test image content".getBytes());
 		mockMvc
-				.perform(multipart("/owners/{ownerId}/pets/new", TEST_OWNER_ID).file(file).param("name", "Betty")
-						.param("type", "hamster")
-						.param("birthDate", "2015-02-12"))
-				.andExpect(status().is3xxRedirection())
-				.andExpect(view().name("redirect:/owners/{ownerId}"));
+			.perform(multipart("/owners/{ownerId}/pets/new", TEST_OWNER_ID).file(file)
+				.param("name", "Betty")
+				.param("type", "hamster")
+				.param("birthDate", "2015-02-12"))
+			.andExpect(status().is3xxRedirection())
+			.andExpect(view().name("redirect:/owners/{ownerId}"));
 	}
 
 	@Test
@@ -347,12 +349,12 @@ class PetControllerTests {
 		MockMultipartFile file = new MockMultipartFile("imageFile", "test.png", "image/png",
 				"test image content".getBytes());
 		mockMvc
-				.perform(multipart("/owners/{ownerId}/pets/{petId}/edit", TEST_OWNER_ID, TEST_PET_ID).file(file)
-						.param("name", "Betty")
-						.param("type", "hamster")
-						.param("birthDate", "2015-02-12"))
-				.andExpect(status().is3xxRedirection())
-				.andExpect(view().name("redirect:/owners/{ownerId}"));
+			.perform(multipart("/owners/{ownerId}/pets/{petId}/edit", TEST_OWNER_ID, TEST_PET_ID).file(file)
+				.param("name", "Betty")
+				.param("type", "hamster")
+				.param("birthDate", "2015-02-12"))
+			.andExpect(status().is3xxRedirection())
+			.andExpect(view().name("redirect:/owners/{ownerId}"));
 	}
 
 	@Test
@@ -365,9 +367,9 @@ class PetControllerTests {
 		given(this.owners.findById(TEST_OWNER_ID)).willReturn(Optional.of(owner));
 
 		mockMvc.perform(get("/owners/{ownerId}/pets/{petId}/image", TEST_OWNER_ID, TEST_PET_ID))
-				.andExpect(status().isOk())
-				.andExpect(content().contentType(org.springframework.http.MediaType.IMAGE_PNG))
-				.andExpect(content().bytes("image content".getBytes()));
+			.andExpect(status().isOk())
+			.andExpect(content().contentType(org.springframework.http.MediaType.IMAGE_PNG))
+			.andExpect(content().bytes("image content".getBytes()));
 	}
 
 	@Test
@@ -376,20 +378,20 @@ class PetControllerTests {
 		given(this.owners.findById(TEST_OWNER_ID)).willReturn(Optional.of(owner));
 
 		mockMvc.perform(get("/owners/{ownerId}/pets/{petId}/image", TEST_OWNER_ID, TEST_PET_ID))
-				.andExpect(status().isNotFound());
+			.andExpect(status().isNotFound());
 	}
 
 	@Test
 	void testProcessUpdateFormAddsNewPetWhenIdChanges() throws Exception {
 		MockMultipartFile emptyFile = new MockMultipartFile("imageFile", new byte[0]);
 		mockMvc
-				.perform(multipart("/owners/{ownerId}/pets/{petId}/edit", TEST_OWNER_ID, TEST_PET_ID).file(emptyFile)
-						.param("name", "Betty")
-						.param("type", "hamster")
-						.param("birthDate", "2015-02-12")
-						.param("id", "99"))
-				.andExpect(status().is3xxRedirection())
-				.andExpect(view().name("redirect:/owners/{ownerId}"));
+			.perform(multipart("/owners/{ownerId}/pets/{petId}/edit", TEST_OWNER_ID, TEST_PET_ID).file(emptyFile)
+				.param("name", "Betty")
+				.param("type", "hamster")
+				.param("birthDate", "2015-02-12")
+				.param("id", "99"))
+			.andExpect(status().is3xxRedirection())
+			.andExpect(view().name("redirect:/owners/{ownerId}"));
 
 		ArgumentCaptor<Owner> ownerCaptor = ArgumentCaptor.forClass(Owner.class);
 		verify(owners).save(ownerCaptor.capture());
@@ -407,8 +409,8 @@ class PetControllerTests {
 		given(this.owners.findById(TEST_OWNER_ID)).willReturn(Optional.of(owner));
 
 		mockMvc.perform(get("/owners/{ownerId}/pets/{petId}/image", TEST_OWNER_ID, TEST_PET_ID))
-				.andExpect(status().isOk())
-				.andExpect(content().contentType(org.springframework.http.MediaType.IMAGE_PNG));
+			.andExpect(status().isOk())
+			.andExpect(content().contentType(org.springframework.http.MediaType.IMAGE_PNG));
 	}
 
 	@Test
@@ -423,8 +425,8 @@ class PetControllerTests {
 		given(this.owners.findById(TEST_OWNER_ID)).willReturn(Optional.of(owner));
 
 		mockMvc.perform(get("/owners/{ownerId}/pets/{petId}/image", TEST_OWNER_ID, TEST_PET_ID))
-				.andExpect(status().isOk())
-				.andExpect(content().contentType(org.springframework.http.MediaType.IMAGE_PNG));
+			.andExpect(status().isOk())
+			.andExpect(content().contentType(org.springframework.http.MediaType.IMAGE_PNG));
 	}
 
 	@Test
@@ -433,7 +435,7 @@ class PetControllerTests {
 		given(this.owners.findById(TEST_OWNER_ID)).willReturn(Optional.of(owner));
 
 		mockMvc.perform(get("/owners/{ownerId}/pets/{petId}/image", TEST_OWNER_ID, TEST_PET_ID))
-				.andExpect(status().isNotFound());
+			.andExpect(status().isNotFound());
 	}
 
 }
