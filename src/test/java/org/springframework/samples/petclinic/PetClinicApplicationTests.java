@@ -22,11 +22,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 class PetClinicApplicationTests {
 
-    @Test
-    void contextLoads() {
-        // Este método vazio é suficiente para verificar se o contexto da aplicação
-        // carrega sem lançar exceções. Se houver falhas na configuração,
-        // na criação de beans ou no escaneamento de componentes, o teste falhará.
-    }
+	@Test
+	void contextLoads() {
+		// Este método vazio é suficiente para verificar se o contexto da aplicação
+		// carrega sem lançar exceções. Se houver falhas na configuração,
+		// na criação de beans ou no escaneamento de componentes, o teste falhará.
+	}
 
 }
