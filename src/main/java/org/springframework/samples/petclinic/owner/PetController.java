@@ -228,7 +228,8 @@ class PetController {
 						return ResponseEntity.ok().contentType(MediaType.IMAGE_PNG).body(defaultImage);
 					}
 				}
-				catch (IOException e) { }
+				catch (IOException e) {
+				}
 			}
 		}
 		return ResponseEntity.notFound().build();
